@@ -14,6 +14,9 @@ class _AiAppState extends State<AiApp> {
   String textoGerado = "";
 
   Future<void> gerarConteudo() async {
+    setState(() {
+      estaCarregando = true;
+    });
     print(controller.text);
     String prompt = (controller.text);
     String key = "AIzaSyDSKvn1049-O2NyaYZglNw5jjVwGmqPN3E";
@@ -35,14 +38,14 @@ class _AiAppState extends State<AiApp> {
         print(resposta.data);
         setState(() {
           textoGerado =
-              resposta.data['candidates'][0]['contents']['parts'][0]['text'];
+              resposta.data['candidates'][0]['content']['parts'][0]['text'];
         });
       }
     } catch (erro) {
       print(erro);
     } finally {
       setState(() {
-        estaCarregando = true;
+        estaCarregando = false;
       });
     }
   }
@@ -72,8 +75,13 @@ class _AiAppState extends State<AiApp> {
                     children: [
                       estaCarregando
                           ? CircularProgressIndicator()
-                          : Text("Texto gerado:"),
-                      Text(textoGerado),
+                          : Column(
+                            children: [
+                              Text("Texto gerado:"),
+                               Text(textoGerado),
+                            ],
+                          ),
+                     
                     ],
                   ),
                 ),
